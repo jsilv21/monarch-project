@@ -1,13 +1,23 @@
 {{ config(materialized='table') }}
 
-with ad as (
-    select * from {{ ref('stg_ad_performance') }}
+with ad_agg as (
+    select
+        campaign_id,
+        sum(impressions) as total_impressions,
+        sum(clicks) as total_clicks,
+        sum(conversions) as total_conversions,
+        sum(spend) as total_spend
+    from {{ ref('stg_ad_performance') }}
+    group by campaign_id
 ),
-campaigns as (
-    select * from {{ ref('stg_campaigns') }}
-),
-rev as (
-    select * from {{ ref('stg_customer_revenue') }}
+
+rev_agg as (
+    select
+        campaign_id,
+        count(distinct customer_id) as new_customers,
+        sum(revenue) as total_revenue
+    from {{ ref('stg_customer_revenue') }}
+    group by campaign_id
 )
 
 select
@@ -18,22 +28,21 @@ select
     c.end_date,
     c.budget_usd,
     
-    sum(a.impressions) as total_impressions,
-    sum(a.clicks) as total_clicks,
-    sum(a.conversions) as total_conversions,
-    sum(a.spend) as total_spend,
+    a.total_impressions,
+    a.total_clicks,
+    a.total_conversions,
+    a.total_spend,
     
-    count(distinct r.customer_id) as new_customers,
-    sum(r.revenue) as total_revenue,
+    r.new_customers,
+    r.total_revenue,
+    
+    -- Metrics
+    a.total_clicks::float / nullif(a.total_impressions,0) as ctr,
+    a.total_conversions::float / nullif(a.total_clicks,0) as conversion_rate,
+    a.total_spend::float / nullif(r.new_customers,0) as cac,
+    r.total_revenue::float / nullif(r.new_customers,0) as ltv,
+    r.total_revenue::float / nullif(a.total_spend,0) as roas
 
-    -- Metrics, convert to float for calcs
-    sum(a.clicks)::float / nullif(sum(a.impressions),0) as ctr,
-    sum(a.conversions)::float / nullif(sum(a.clicks),0) as conversion_rate,
-    sum(a.spend)::float / nullif(count(distinct r.customer_id),0) as cac,
-    sum(r.revenue)::float / nullif(count(distinct r.customer_id),0) as ltv,
-    sum(r.revenue)::float / nullif(sum(a.spend),0) as roas
-
-from ad a
-join campaigns c on a.campaign_id = c.campaign_id
-left join rev r on a.campaign_id = r.campaign_id
-group by 1,2,3,4,5,6
+from {{ ref('stg_campaigns') }} c
+left join ad_agg a on c.campaign_id = a.campaign_id
+left join rev_agg r on c.campaign_id = r.campaign_id
