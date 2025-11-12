@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: raw
+    database: MONARCH_DEMO     # e.g. ANALYTICS_DB
+    schema: RAW                           # or your staging schema name
+    tables:
+      - name: dim_campaign
+        description: "Campaign metadata including budgets and channels."
+        columns:
+          - name: campaign_id
+            tests: [not_null, unique]
+
+      - name: fact_ad_performance
+        description: "Daily ad spend and engagement metrics per campaign."
+        columns:
+          - name: campaign_id
+            tests: [not_null]
+          - name: date
+            tests: [not_null]
+
+      - name: fact_customer_revenue
+        description: "Customer-level acquisition and revenue data linked to campaigns."
+        columns:
+          - name: customer_id
+            tests: [not_null, unique]
+          - name: campaign_id
+            tests: [not_null]
