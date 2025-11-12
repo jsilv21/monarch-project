@@ -9,6 +9,12 @@ st.set_page_config(page_title="Monarch Analytics Demo", layout="wide")
 creds = st.secrets["snowflake"]
 conn = snowflake.connector.connect(**creds)
 
+# Explicitly set context
+conn.cursor().execute(f"USE ROLE {creds['role']}")
+conn.cursor().execute(f"USE WAREHOUSE {creds['warehouse']}")
+conn.cursor().execute(f"USE DATABASE {creds['database']}")
+conn.cursor().execute(f"USE SCHEMA {creds['schema']}")
+
 
 # 2. Load data from DBT models
 @st.cache_data
