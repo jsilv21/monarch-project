@@ -8,4 +8,4 @@ select
     end_date,
     budget_usd,
     owner
-from {{ source('raw', 'dim_campaign') }}
+from {{ source('raw', 'dim_campaigns') }}

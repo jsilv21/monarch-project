@@ -5,7 +5,7 @@ sources:
     database: MONARCH_DEMO     # e.g. ANALYTICS_DB
     schema: RAW                           # or your staging schema name
     tables:
-      - name: dim_campaign
+      - name: dim_campaigns
         description: "Campaign metadata including budgets and channels."
         columns:
           - name: campaign_id
