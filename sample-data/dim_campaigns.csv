@@ -1,0 +1,10 @@
+campaign_id,name,channel,start_date,end_date,budget_usd,owner
+1,January Promo,Google Ads,2025-01-01,2025-01-31,7000,Alice
+2,Tax Season Blitz,Google Ads,2025-02-01,2025-04-15,10000,Bob
+3,Gen Z Budget Commercial,Youtube,2025-03-01,2025-06-01,8500,Charlie
+4,Mint Alternative Campaign,Meta Ads,2025-05-01,2025-06-30,5500,Emily
+5,Credit Karma Alternative Campaign,Meta Ads,2025-06-30,2025-08-29,7500,Frank
+6,YNAB Alternative Campaign,Meta Ads,2025-08-29,2025-10-28,8200,Georgia
+7,Mint Alternative Campaign,TikTok,2025-05-01,2025-06-30,5500,Hank
+8,Credit Karma Alternative Campaign,TikTok,2025-06-30,2025-08-29,7500,Isaac
+9,YNAB Alternative Campaign,TikTok,2025-08-29,2025-10-28,8200,John
