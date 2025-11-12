@@ -13,8 +13,10 @@ conn = snowflake.connector.connect(**creds)
 # 2. Load data from DBT models
 @st.cache_data
 def load_data():
-    fct_marketing = pd.read_sql("SELECT * FROM fct_marketing_metrics", conn)
-    fct_ltv = pd.read_sql("SELECT * FROM fct_customer_ltv", conn)
+    fct_marketing = pd.read_sql(
+        "SELECT * FROM raw_mart_marketing.fct_marketing_metrics", conn
+    )
+    fct_ltv = pd.read_sql("SELECT * FROM raw_mart_marketing.fct_customer_ltv", conn)
     return fct_marketing, fct_ltv
 
 
