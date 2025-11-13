@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import snowflake.connector
-import altair as alt
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Monarch Analytics Demo", layout="wide")
@@ -9,12 +8,6 @@ st.set_page_config(page_title="Monarch Analytics Demo", layout="wide")
 # --- SNOWFLAKE CONNECTION ---
 creds = st.secrets["snowflake"]
 conn = snowflake.connector.connect(**creds)
-
-# Explicitly set context
-conn.cursor().execute(f"USE ROLE {creds['role']}")
-conn.cursor().execute(f"USE WAREHOUSE {creds['warehouse']}")
-conn.cursor().execute(f"USE DATABASE {creds['database']}")
-conn.cursor().execute(f"USE SCHEMA {creds['schema']}")
 
 
 # --- LOAD DATA ---
@@ -76,9 +69,21 @@ spend_revenue = filtered_marketing.set_index("campaign_name")[
 ]
 st.bar_chart(spend_revenue)
 
+
 # --- CAC vs LTV ---
 st.subheader("CAC vs. LTV by Campaign")
-st.scatter_chart(fct_marketing, x="cac", y="ltv", color="campaign_name")
+channels = fct_marketing["channel"].unique()
+
+cols = st.columns(len(channels))
+for i, ch in enumerate(channels):
+    with cols[i]:
+        st.caption(ch)
+        st.scatter_chart(
+            fct_marketing[fct_marketing["channel"] == ch],
+            x="cac",
+            y="ltv",
+            color="campaign_name",
+        )
 
 # --- CUSTOMER LTV DISTRIBUTION ---
 st.subheader("Customer Lifetime Value Distribution")
