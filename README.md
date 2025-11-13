@@ -1,5 +1,10 @@
 # Monarch Analytics Project
 
+## Demo Dashboard Link
+
+View the dashboard here:
+[Streamlit Dashboard](https://monarch-analytics-demo.streamlit.app/)
+
 ## Purpose
 
 This Project delivers sample marketing analytics by generating synthetic data and showcasing a complete data pipeline. It provides insights into key metrics such as customer acquisition cost (CAC), lifetime value (LTV), and return on ad spend (ROAS).
