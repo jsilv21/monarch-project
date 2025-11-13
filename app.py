@@ -78,8 +78,7 @@ st.bar_chart(spend_revenue)
 
 # --- CAC vs LTV ---
 st.subheader("CAC vs. LTV by Campaign")
-chart_data = fct_marketing.merge(fct_ltv, on="campaign_id", how="left")
-st.scatter_chart(chart_data, x="cac", y="lifetime_revenue", color="campaign_name")
+st.scatter_chart(fct_marketing, x="cac", y="ltv", color="campaign_name")
 
 # --- CUSTOMER LTV DISTRIBUTION ---
 st.subheader("Customer Lifetime Value Distribution")
